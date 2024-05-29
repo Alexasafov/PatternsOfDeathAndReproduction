@@ -33,3 +33,12 @@ def about():
         message='Your application description page.',
         year=datetime.now().year
     )
+
+@route('/game_of_life')
+@view('game_of_life')
+def game_of_life():
+    """Renders the game of life page."""
+    return dict(
+        title='Game of life',
+        year=datetime.now().year
+    )
