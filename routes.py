@@ -14,23 +14,13 @@ def home():
         year=datetime.now().year
     )
 
-@route('/contact')
-@view('contact')
-def contact():
-    """Renders the contact page."""
-    return dict(
-        title='Contact',
-        message='Your contact page.',
-        year=datetime.now().year
-    )
-
 @route('/about')
 @view('about')
 def about():
     """Renders the about page."""
     return dict(
-        title='About',
-        message='Your application description page.',
+        title='О нас',
+        message='',
         year=datetime.now().year
     )
 
@@ -39,6 +29,6 @@ def about():
 def game_of_life():
     """Renders the game of life page."""
     return dict(
-        title='Game of life',
+        title='Игра жизнь',
         year=datetime.now().year
     )
