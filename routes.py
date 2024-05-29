@@ -42,3 +42,13 @@ def game_of_life():
         title='Game of life',
         year=datetime.now().year
     )
+
+
+@route('/infect')
+@view('infect')
+def infect():
+    """Renders the game of life page."""
+    return dict(
+        title='infect',
+        year=datetime.now().year
+    )
