@@ -2,6 +2,10 @@
     padding-bottom: 10px;
 }
 
+#theory {
+    width: 75%;
+}
+
 table {
     background-color: #C5D6C6;
     border-spacing: 0;
