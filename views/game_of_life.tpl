@@ -1,6 +1,6 @@
 % rebase('layout.tpl', title=title, year=year)
 
-<h3><a href="#theory">К теории</a></h3>
+<h3><a href="#theoryGrid">К теории</a></h3>
 
 <h1 id="title">Игра Жизнь</h1>
 
@@ -16,7 +16,7 @@
 <input id="height" type="number" min="10" max="50" value="10" required="true" placeholder="Высота">
 </div>
 
-<div id="theory">
+<div id="theoryGrid">
     <h1>Теория игры "Жизнь" Джона Конвея</h1>
 
     <h2>Введение</h2>
