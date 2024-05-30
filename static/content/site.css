@@ -36,6 +36,9 @@ container {
     margin-top: 20px;
 }
 
+p {
+    font-size: 20px;
+}
 /* Set width on the form input elements since they're 100% wide by default */
 input,
 select,
