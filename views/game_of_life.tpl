@@ -2,6 +2,8 @@
 
 <h3><a href="#theory">К теории</a></h3>
 
+<h1 id="title">Игра Жизнь</h1>
+
 <div id="gridContainer">
     
 </div>
@@ -10,6 +12,8 @@
 <button id="start"><span>Старт</span></button>
 <button id="clear"><span>Очистить</span></button>
 <button id="random"><span>Рандом</span></button>
+<input id="width" type="number" min="10" max="50" value="10" required="true" placeholder="Ширина">
+<input id="height" type="number" min="10" max="50" value="10" required="true" placeholder="Высота">
 </div>
 
 <div id="theory">
