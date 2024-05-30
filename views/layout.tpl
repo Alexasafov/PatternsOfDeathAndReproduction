@@ -25,6 +25,7 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="/about">О нас</a></li>
+                    <li><a href="/infect">Infect</a></li>
                 </ul>
             </div>
         </div>
