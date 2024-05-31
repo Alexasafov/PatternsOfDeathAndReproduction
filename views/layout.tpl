@@ -26,7 +26,8 @@
                 <ul class="nav navbar-nav">
                     <li><a href="/about">О нас</a></li>
                     <li><a href="/game_of_life">Игра "Жизнь"</a></li>
-                    <li><a href="/infect">Распространения инфекции</a></li>
+                    <li><a href="/infect">Распространение инфекции</a></li>
+                    <li><a href="/underwater_world">Подводный мир</a></li>
                 </ul>
             </div>
         </div>

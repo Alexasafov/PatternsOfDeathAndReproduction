@@ -42,3 +42,12 @@ def infect():
         title='infect',
         year=datetime.now().year
     )
+
+@route('/underwater_world')
+@view('underwater_world')
+def underwater():
+    """Renders the game of life page."""
+    return dict(
+        title='underwater world',
+        year=datetime.now().year
+    )
