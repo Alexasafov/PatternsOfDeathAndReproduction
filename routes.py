@@ -2,8 +2,9 @@
 Routes and views for the bottle application.
 """
 
-from bottle import route, view
+from bottle import route, view, request
 from datetime import datetime
+from game_of_life_handler import snapshot, get_snapshot
 
 @route('/')
 @route('/home')
@@ -51,3 +52,11 @@ def underwater():
         title='underwater world',
         year=datetime.now().year
     )
+
+@route('/save_snapshot', method='POST')
+def save_snapshot():
+    return snapshot(request.json)
+
+@route('/snapshots/<name>')
+def snapshot_get(name):
+    return get_snapshot(name)

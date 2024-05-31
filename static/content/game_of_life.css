@@ -24,6 +24,7 @@ span {
 
 #start,
 #clear,
+#snapshot,
 #random {
     padding: .75em;
     border-radius: 5px;

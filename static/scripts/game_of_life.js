@@ -49,6 +49,7 @@ function createTable() {
         // Throw error
         console.error("Problem: No div for the drid table!");
     }
+    gridContainer.replaceChildren();
     var table = document.createElement("table");
     
     for (var i = 0; i < rows; i++) {
@@ -106,6 +107,13 @@ function setupControlButtons() {
     // button to set random initial state
     var randomButton = document.getElementById("random");
     randomButton.onclick = randomButtonHandler;
+
+    document.getElementById('width').onchange = resizeButtonHandler;
+    document.getElementById('height').onchange = resizeButtonHandler;
+
+    document.getElementById('snapshot').onclick = sendSnapshotHandler;
+
+    document.getElementById('getSnapshot').onclick = getSnapshotHandler;
 }
 
 function randomButtonHandler() {
@@ -200,12 +208,12 @@ function applyRules(row, col) {
             nextGrid[row][col] = 0;
         }
     } else if (grid[row][col] == 0) {
-            if (numNeighbors == 3) {
-                nextGrid[row][col] = 1;
-            }
+        if (numNeighbors == 3) {
+            nextGrid[row][col] = 1;
         }
     }
-    
+}
+
 function countNeighbors(row, col) {
     var count = 0;
     if (row-1 >= 0) {
@@ -233,6 +241,65 @@ function countNeighbors(row, col) {
         if (grid[row+1][col+1] == 1) count++;
     }
     return count;
+}
+
+function resizeButtonHandler() {
+    rows = parseInt(document.getElementById('height').value);
+    cols = parseInt(document.getElementById('width').value);
+    playing = false;
+    document.getElementById('start').innerText = "Start";
+    clearTimeout(timer);
+    initializeGrids();
+    createTable();
+    resetGrids();
+}
+
+function sendSnapshotHandler() {
+    //var gridContainer = document.getElementsByTagName('table')[0];
+    //console.log(gridContainer);
+    var snapshot = grid.map(row => row.slice());
+    console.log("Sending snapshot to server:", snapshot);
+    fetch('/save_snapshot', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ snapshot: snapshot })
+    }).then(response => {
+        if (response.ok) {
+            console.log("Snapshot saved successfully.");
+        } else {
+            console.error("Error saving snapshot.");
+        }
+    }).catch(error => {
+        console.error("Network error:", error);
+    });
+}
+
+function getSnapshotHandler() {
+    fetch('/snapshots/1', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(response => {
+        if (response.ok) {
+            response.json().then(json => {
+                console.log(json.data);
+                rows = json.data.length
+                cols = json.data[0].length
+                initializeGrids();
+                createTable();
+                resetGrids();
+                grid = json.data;
+                updateView();
+            });
+        } else {
+            console.error("Error gettin snapshot.");
+        }
+    }).catch(error => {
+        console.error("Network error:", error);
+    });
 }
 
 // Start everything
