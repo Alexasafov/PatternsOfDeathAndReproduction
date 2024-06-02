@@ -111,7 +111,7 @@ function setupControlButtons() {
     document.getElementById('width').onchange = resizeButtonHandler;
     document.getElementById('height').onchange = resizeButtonHandler;
 
-    document.getElementById('snapshot').onclick = sendSnapshotHandler;
+    document.getElementById('snapshot').onkeyup = sendSnapshotHandler;
 
     document.getElementById('getSnapshot').onclick = getSnapshotHandler;
 }
@@ -159,12 +159,12 @@ function startButtonHandler() {
     if (playing) {
         console.log("Pause the game");
         playing = false;
-        this.innerHTML = "Continue";
+        this.innerHTML = "Продожить";
         clearTimeout(timer);
     } else {
         console.log("Continue the game");
         playing = true;
-        this.innerHTML = "Pause";
+        this.innerHTML = "Пауза";
         play();
     }
 }
@@ -247,33 +247,35 @@ function resizeButtonHandler() {
     rows = parseInt(document.getElementById('height').value);
     cols = parseInt(document.getElementById('width').value);
     playing = false;
-    document.getElementById('start').innerText = "Start";
+    document.getElementById('start').innerText = "Старт";
     clearTimeout(timer);
     initializeGrids();
     createTable();
     resetGrids();
 }
 
-function sendSnapshotHandler() {
+function sendSnapshotHandler(event) {
     //var gridContainer = document.getElementsByTagName('table')[0];
     //console.log(gridContainer);
-    var snapshot = grid.map(row => row.slice());
-    console.log("Sending snapshot to server:", snapshot);
-    fetch('/save_snapshot', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ snapshot: snapshot })
-    }).then(response => {
-        if (response.ok) {
-            console.log("Snapshot saved successfully.");
-        } else {
-            console.error("Error saving snapshot.");
-        }
-    }).catch(error => {
-        console.error("Network error:", error);
-    });
+    if(event.keyCode == 13) { //enter
+        var snapshot = grid.map(row => row.slice());
+        console.log("Sending snapshot to server:", snapshot);
+        fetch('/save_snapshot', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ snapshot: snapshot })
+        }).then(response => {
+            if (response.ok) {
+                console.log("Snapshot saved successfully.");
+            } else {
+                console.error("Error saving snapshot.");
+            }
+        }).catch(error => {
+            console.error("Network error:", error);
+        });
+    }
 }
 
 function getSnapshotHandler() {

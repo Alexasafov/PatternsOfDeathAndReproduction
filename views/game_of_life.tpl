@@ -14,7 +14,7 @@
 <button id="random"><span>Рандом</span></button>
 <input id="width" type="number" min="10" max="50" value="10" required="true" placeholder="Ширина">
 <input id="height" type="number" min="10" max="50" value="10" required="true" placeholder="Высота">
-<button id="snapshot"><span>Снимок</span></button>
+<input id="snapshot" placeholder="Название снимка">
 <button id="getSnapshot"><span>Получить снимок</span></button>
 </div>
 
