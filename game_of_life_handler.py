@@ -7,9 +7,10 @@ def snapshot(data):
     global snapshots
     try:
         snapshot = data.get('snapshot')
+        name = data.get('name')
         if snapshot is not None:
             
-            snapshots["1"] = snapshot
+            snapshots[name] = snapshot
             
             print("Received snapshot:", snapshot)
             response.content_type = 'application/json'
@@ -26,7 +27,13 @@ def get_snapshot(name):
     try:
         snapshot = snapshots[name]
         response.content_type = 'application/json'
-        return dict(data=snapshot)  
+        return dict(data=snapshot)
     except Exception as e:
         response.status = 500
         return json.dumps({"message": "Server error: " + str(e)})
+
+
+def all_snapshots():
+    global snapshots
+    #response.content_type = 'application/json'
+    return snapshots.keys()

@@ -113,7 +113,7 @@ function setupControlButtons() {
 
     document.getElementById('snapshot').onkeyup = sendSnapshotHandler;
 
-    document.getElementById('getSnapshot').onclick = getSnapshotHandler;
+    document.getElementById('getSnapshot').onchange = getSnapshotHandler;
 }
 
 function randomButtonHandler() {
@@ -137,7 +137,7 @@ function clearButtonHandler() {
     
     playing = false;
     var startButton = document.getElementById('start');
-    startButton.innerHTML = "Start";    
+    startButton.innerHTML = "Старт";    
     clearTimeout(timer);
     
     var cellsList = document.getElementsByClassName("live");
@@ -259,16 +259,21 @@ function sendSnapshotHandler(event) {
     //console.log(gridContainer);
     if(event.keyCode == 13) { //enter
         var snapshot = grid.map(row => row.slice());
+        var name = document.getElementById('snapshot').value;
         console.log("Sending snapshot to server:", snapshot);
         fetch('/save_snapshot', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ snapshot: snapshot })
+            body: JSON.stringify({ name: name, snapshot: snapshot })
         }).then(response => {
             if (response.ok) {
                 console.log("Snapshot saved successfully.");
+                document.getElementById('snapshot').value = "";
+                var newOption = document.createElement("option");
+                newOption.textContent = name;
+                document.getElementById('getSnapshot').prepend(newOption);
             } else {
                 console.error("Error saving snapshot.");
             }
@@ -279,7 +284,8 @@ function sendSnapshotHandler(event) {
 }
 
 function getSnapshotHandler() {
-    fetch('/snapshots/1', {
+    var name = document.getElementById('getSnapshot').value;
+    fetch('/snapshots/' + name, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'

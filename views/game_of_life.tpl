@@ -15,7 +15,12 @@
 <input id="width" type="number" min="10" max="50" value="10" required="true" placeholder="Ширина">
 <input id="height" type="number" min="10" max="50" value="10" required="true" placeholder="Высота">
 <input id="snapshot" placeholder="Название снимка">
-<button id="getSnapshot"><span>Получить снимок</span></button>
+<select id="getSnapshot">
+    <option value="" disabled selected>Выбор снимка</option>
+    % for name in snapshots:
+        <option>{{name}}</option>
+    % end
+</select>
 </div>
 
 <div id="theoryGrid">

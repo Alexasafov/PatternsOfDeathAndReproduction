@@ -4,7 +4,7 @@ Routes and views for the bottle application.
 
 from bottle import route, view, request
 from datetime import datetime
-from game_of_life_handler import snapshot, get_snapshot
+from game_of_life_handler import snapshot, get_snapshot, all_snapshots
 
 @route('/')
 @route('/home')
@@ -31,7 +31,8 @@ def game_of_life():
     """Renders the game of life page."""
     return dict(
         title='Игра жизнь',
-        year=datetime.now().year
+        year=datetime.now().year,
+        snapshots = all_snapshots()
     )
 
 
@@ -60,3 +61,7 @@ def save_snapshot():
 @route('/snapshots/<name>')
 def snapshot_get(name):
     return get_snapshot(name)
+
+# @route('/snapshots')
+# def snapshots_get():
+#     return all_snapshots()
