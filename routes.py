@@ -54,7 +54,7 @@ def underwater():
         year=datetime.now().year
     )
 
-@route('/save_snapshot', method='POST')
+@route('/snapshot/add', method='POST')
 def save_snapshot():
     return snapshot(request.json)
 

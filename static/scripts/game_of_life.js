@@ -1,6 +1,9 @@
 var rows = 38;
 var cols = 100;
 
+var sizeHeight = rows * 10;
+var sizeWidth = cols * 10;
+
 var playing = false;
 
 var grid = new Array(rows);
@@ -52,12 +55,16 @@ function createTable() {
     gridContainer.replaceChildren();
     var table = document.createElement("table");
     
+    var width = sizeWidth / cols;
+    var height = sizeHeight / rows;
     for (var i = 0; i < rows; i++) {
         var tr = document.createElement("tr");
         for (var j = 0; j < cols; j++) {//
             var cell = document.createElement("td");
             cell.setAttribute("id", i + "_" + j);
             cell.setAttribute("class", "dead");
+            cell.style.width = width.toString() + "px";
+            cell.style.height = height.toString() + "px";
             cell.onclick = cellClickHandler;
             tr.appendChild(cell);
         }
@@ -261,7 +268,7 @@ function sendSnapshotHandler(event) {
         var snapshot = grid.map(row => row.slice());
         var name = document.getElementById('snapshot').value;
         console.log("Sending snapshot to server:", snapshot);
-        fetch('/save_snapshot', {
+        fetch('/snapshot/add', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -296,6 +303,8 @@ function getSnapshotHandler() {
                 console.log(json.data);
                 rows = json.data.length
                 cols = json.data[0].length
+                document.getElementById('height').value = rows;
+                document.getElementById('width').value = cols;
                 initializeGrids();
                 createTable();
                 resetGrids();
