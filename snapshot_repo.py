@@ -9,7 +9,7 @@ class Cell(Enum):
     DEATH = 0
     LIVE = 1
 
-Snapshot: TypeAlias  = list[list[Cell]]
+Snapshot: TypeAlias = list[list[Cell]]
 
 class SnapshotRepository(Protocol):
     def add(self, name: str, snapshot: Snapshot) -> None:
