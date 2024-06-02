@@ -9,18 +9,18 @@
 </div>
 
 <div class="controls">
-<button id="start"><span>Старт</span></button>
-<button id="clear"><span>Очистить</span></button>
-<button id="random"><span>Рандом</span></button>
-<input id="width" type="number" min="10" max="100" value="100" required="true" placeholder="Ширина">
-<input id="height" type="number" min="10" max="38" value="38" required="true" placeholder="Высота">
-<input id="snapshot" placeholder="Название снимка">
-<select id="getSnapshot">
-    <option value="" disabled selected>Выбор снимка</option>
-    % for name in snapshots:
-        <option>{{name}}</option>
-    % end
-</select>
+    <button id="start"><span>Старт</span></button>
+    <button id="clear"><span>Очистить</span></button>
+    <button id="random"><span>Рандом</span></button>
+    <input id="width" type="number" min="10" max="100" value="100" required="true" placeholder="Ширина">
+    <input id="height" type="number" min="10" max="38" value="38" required="true" placeholder="Высота">
+    <input id="snapshot" placeholder="Название снимка">
+    <select id="getSnapshot">
+        <option value="" disabled selected>Выбор снимка</option>
+        % for name in snapshots:
+            <option>{{name}}</option>
+        % end
+    </select>
 </div>
 
 <div id="theoryGrid">

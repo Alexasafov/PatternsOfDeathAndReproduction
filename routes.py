@@ -4,7 +4,10 @@ Routes and views for the bottle application.
 
 from bottle import route, view, request
 from datetime import datetime
-from game_of_life_handler import snapshot, get_snapshot, all_snapshots
+from game_of_life_handler import snapshot, get_snapshot
+from snapshot_repo import InMemorySnapshotRepository, JsonSnapshotRepository, SnapshotRepository
+
+snapshotRepo: SnapshotRepository = JsonSnapshotRepository()
 
 @route('/')
 @route('/home')
@@ -32,7 +35,7 @@ def game_of_life():
     return dict(
         title='Игра жизнь',
         year=datetime.now().year,
-        snapshots = all_snapshots()
+        snapshots=snapshotRepo.all_snapshot_names()
     )
 
 
@@ -56,12 +59,8 @@ def underwater():
 
 @route('/snapshot/add', method='POST')
 def save_snapshot():
-    return snapshot(request.json)
+    return snapshot(request.json, snapshotRepo)
 
 @route('/snapshots/<name>')
-def snapshot_get(name):
-    return get_snapshot(name)
-
-# @route('/snapshots')
-# def snapshots_get():
-#     return all_snapshots()
+def snapshot_get(name: str):
+    return get_snapshot(name, snapshotRepo)

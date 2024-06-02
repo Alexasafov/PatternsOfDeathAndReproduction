@@ -1,18 +1,21 @@
 var rows = 38;
 var cols = 100;
 
+// cell size = 10x10
 var sizeHeight = rows * 10;
 var sizeWidth = cols * 10;
 
 var playing = false;
 
-var grid = new Array(rows);
-var nextGrid = new Array(rows);
+var grid;
+var nextGrid;
 
 var timer;
 var reproductionTime = 100;
 
 function initializeGrids() {
+    grid = new Array(rows);
+    nextGrid = new Array(rows);
     for (var i = 0; i < rows; i++) {
         grid[i] = new Array(cols);
         nextGrid[i] = new Array(cols);
