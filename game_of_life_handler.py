@@ -8,10 +8,8 @@ class Cell(Enum):
     DEATH = 0
     LIVE = 1
 
-snapshots: dict[str, list[list[Cell]]] = {}
-
+# Сохранение снимка
 def snapshot(data: DictProperty, repo: SnapshotRepository):
-    global snapshots
     try:
         snapshot: Snapshot = data['snapshot']
         name: str = data['name']
@@ -26,9 +24,9 @@ def snapshot(data: DictProperty, repo: SnapshotRepository):
     except Exception as e:
         response.status = 500
         return json.dumps({"message": "Server error: " + str(e)})
-    
+
+# отправка снапшота по имени
 def get_snapshot(name: str, repo: SnapshotRepository):
-    global snapshots
     try:
         snapshot = repo.get(name)
         if snapshot is None:

@@ -3,6 +3,7 @@ var Cell;
     Cell[Cell["Died"] = 0] = "Died";
     Cell[Cell["Live"] = 1] = "Live";
 })(Cell || (Cell = {}));
+// получение компонетов со страницы html
 var heightInput = document.getElementById('height');
 var widthInput = document.getElementById('width');
 var gridContainer = document.getElementById('gridContainer');
@@ -13,16 +14,18 @@ var snapshotNameInput = document.getElementById('snapshot');
 var selectSnapshot = document.getElementById('getSnapshot');
 var rows = 38;
 var cols = 100;
-// cell size = 10x10
+// размер поля в пикселях
 var sizeHeight = rows * 10;
 var sizeWidth = cols * 10;
 var playing = false;
 var grid;
 var timer;
 var reproductionTime = 100;
+// получение клетки по координатам
 function getCell(x, y) {
     return document.getElementById(x + "_" + y);
 }
+// создание поля, где все клетки мертвые
 function createGrid() {
     var newGrid = new Array(rows);
     for (var i = 0; i < rows; i++) {
@@ -33,9 +36,11 @@ function createGrid() {
     }
     return newGrid;
 }
+// инициализация поля
 function initializeGrids() {
     grid = createGrid();
 }
+// установка всех клеток в начально состояние
 function resetGrid() {
     for (var i = 0; i < rows; i++) {
         for (var j = 0; j < cols; j++) {
@@ -43,17 +48,15 @@ function resetGrid() {
         }
     }
 }
-// Initialize
 function initialize() {
     createTable();
     initializeGrids();
     resetGrid();
     setupControlButtons();
 }
-// Lay out the board
+// Создние таблицы html, в которой отображется поле
 function createTable() {
     if (!gridContainer) {
-        // Throw error
         console.error("Problem: No div for the drid table!");
     }
     gridContainer.replaceChildren();
@@ -75,6 +78,7 @@ function createTable() {
     }
     gridContainer.appendChild(table);
 }
+// обработчик нажатия на клетку
 function cellClickHandler() {
     var rowcol = this.id.split("_");
     var row = rowcol[0];
@@ -89,6 +93,7 @@ function cellClickHandler() {
         grid[row][col] = Cell.Live;
     }
 }
+// обновление состояния таблицы
 function updateView() {
     for (var i = 0; i < rows; i++) {
         for (var j = 0; j < cols; j++) {
@@ -106,6 +111,7 @@ function updateView() {
         }
     }
 }
+// назанчение обработчиков для желемнтов на странице
 function setupControlButtons() {
     startButton.onclick = startButtonHandler;
     clearButton.onclick = clearButtonHandler;
@@ -115,6 +121,7 @@ function setupControlButtons() {
     snapshotNameInput.onkeyup = sendSnapshotHandler;
     selectSnapshot.onchange = getSnapshotHandler;
 }
+// создание поля с случайными состояиниями клеток
 function randomButtonHandler() {
     if (playing)
         return;
@@ -137,7 +144,7 @@ function randomButtonHandler() {
         }
     }
 }
-// clear the grid
+// очистка html страницы
 function clearButtonHandler() {
     console.log("Clear the game: stop playing, clear the grid");
     playing = false;
@@ -150,7 +157,7 @@ function clearButtonHandler() {
     }
     resetGrid();
 }
-// start/pause/continue the game
+// Старт, пауза или продолжение в зависимости от текущего состояния
 function startButtonHandler() {
     if (playing) {
         console.log("Pause the game");
@@ -165,13 +172,14 @@ function startButtonHandler() {
         play();
     }
 }
-// run the life game
+// начать эмуляцию
 function play() {
     computeNextGen();
     if (playing) {
         timer = setTimeout(play, reproductionTime);
     }
 }
+// рассчет нового состояния поля
 function computeNextGen() {
     var nextGrid = createGrid();
     for (var i = 0; i < rows; i++) {
@@ -179,16 +187,13 @@ function computeNextGen() {
             applyRules(nextGrid, i, j);
         }
     }
-    // copy nextGrid to grid
     grid = nextGrid;
-    // copy all 1 values to "live" in the table
     updateView();
 }
-// RULES
-// Any live cell with fewer than two live neighbours dies, as if caused by under-population.
-// Any live cell with two or three live neighbours lives on to the next generation.
-// Any live cell with more than three live neighbours dies, as if by overcrowding.
-// Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+// Правила
+// Если живая клетка имеет меньше 2 или более 3 соседей, то в следующем поколении она умирает,
+// в противном случае она выживает;
+// В пустой клетке появляется живая клетка, если у исходной клетки ровно 3 соседа.
 function applyRules(nextGrid, row, col) {
     var numNeighbors = countNeighbors(row, col);
     if (grid[row][col] == Cell.Live) {
@@ -208,42 +213,26 @@ function applyRules(nextGrid, row, col) {
         }
     }
 }
+// подсчет живых соседей клетки по данным координатам
 function countNeighbors(row, col) {
     var count = 0;
-    if (row - 1 >= 0) {
-        if (grid[row - 1][col] == Cell.Live)
-            count++;
-    }
-    if (row - 1 >= 0 && col - 1 >= 0) {
-        if (grid[row - 1][col - 1] == Cell.Live)
-            count++;
-    }
-    if (row - 1 >= 0 && col + 1 < cols) {
-        if (grid[row - 1][col + 1] == Cell.Live)
-            count++;
-    }
-    if (col - 1 >= 0) {
-        if (grid[row][col - 1] == Cell.Live)
-            count++;
-    }
-    if (col + 1 < cols) {
-        if (grid[row][col + 1] == Cell.Live)
-            count++;
-    }
-    if (row + 1 < rows) {
-        if (grid[row + 1][col] == Cell.Live)
-            count++;
-    }
-    if (row + 1 < rows && col - 1 >= 0) {
-        if (grid[row + 1][col - 1] == Cell.Live)
-            count++;
-    }
-    if (row + 1 < rows && col + 1 < cols) {
-        if (grid[row + 1][col + 1] == Cell.Live)
-            count++;
+    var directions = [
+        [-1, 0], [-1, -1], [-1, 1],
+        [0, -1], [0, 1],
+        [1, 0], [1, -1], [1, 1]
+    ];
+    for (var i = 0; i < directions.length; i++) {
+        var newRow = row + directions[i][0];
+        var newCol = col + directions[i][1];
+        if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols) {
+            if (grid[newRow][newCol] === Cell.Live) {
+                count++;
+            }
+        }
     }
     return count;
 }
+// измененние размера поля
 function resizeButtonHandler() {
     rows = parseInt(heightInput.value);
     cols = parseInt(widthInput.value);
@@ -254,12 +243,15 @@ function resizeButtonHandler() {
     createTable();
     resetGrid();
 }
+// отправка снимка на сервер
 function sendSnapshotHandler(event) {
-    //var gridContainer = document.getElementsByTagName('table')[0];
-    //console.log(gridContainer);
-    if (event.keyCode == 13) { //enter
-        var snapshot = grid.map(function (row) { return row.slice(); });
+    if (event.keyCode == 13) { // Нажатие на кнопку Enter
         var name = snapshotNameInput.value;
+        if (!name) {
+            alert("Не заполнено поле с названием снимка");
+            return;
+        }
+        var snapshot = grid.map(function (row) { return row.slice(); });
         console.log("Sending snapshot to server:", snapshot);
         fetch('/snapshot/add', {
             method: 'POST',
@@ -278,11 +270,12 @@ function sendSnapshotHandler(event) {
             else {
                 console.error("Error saving snapshot.");
             }
-        }).catch(function (error) {
+        })["catch"](function (error) {
             console.error("Network error:", error);
         });
     }
 }
+// получение снимка с сервера
 function getSnapshotHandler() {
     var name = selectSnapshot.value;
     fetch('/snapshots/' + name, {
@@ -308,9 +301,8 @@ function getSnapshotHandler() {
         else {
             console.error("Error gettin snapshot.");
         }
-    }).catch(function (error) {
+    })["catch"](function (error) {
         console.error("Network error:", error);
     });
 }
-// Start everything
 window.onload = initialize;

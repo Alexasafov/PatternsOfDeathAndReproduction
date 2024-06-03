@@ -11,16 +11,21 @@ class Cell(Enum):
 
 Snapshot: TypeAlias = list[list[Cell]]
 
+# протокол репозитория
 class SnapshotRepository(Protocol):
+    # добавление снимка в репозиторий
     def add(self, name: str, snapshot: Snapshot) -> None:
         ...
     
+    # получние снимка из репозитория
     def get(self, name: str) -> Snapshot | None:
         ...
     
+    # название всех снимков
     def all_snapshot_names(self) -> list[str]:
         ...
 
+# Репозиторий сохраняющий данные в оперативной памяти
 class InMemorySnapshotRepository:
     def __init__(self):
         self.snapshots: dict[str, list[list[Cell]]] = {}
@@ -34,6 +39,7 @@ class InMemorySnapshotRepository:
     def all_snapshot_names(self) -> list[str]:
         return list(self.snapshots.keys())
 
+# Репозиторий сохраняющий данные в json
 class JsonSnapshotRepository:    
     def __init__(self):
         if not os.path.exists(WRITEPATH):
