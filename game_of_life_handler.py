@@ -1,5 +1,5 @@
 from enum import Enum
-from bottle import response, DictProperty
+from bottle import response
 import json
 from snapshot_repo import Snapshot, SnapshotRepository
 
@@ -8,7 +8,7 @@ class Cell(Enum):
     LIVE = 1
 
 # Сохранение снимка
-def snapshot(data: DictProperty, repo: SnapshotRepository):
+def snapshot(data: dict, repo: SnapshotRepository):
     try:
         snapshot: Snapshot = data['snapshot']
         name: str = data['name']
@@ -16,6 +16,7 @@ def snapshot(data: DictProperty, repo: SnapshotRepository):
             repo.add(name, snapshot)
             print("Received snapshot:", snapshot)
             response.content_type = 'application/json'
+            response.status = 200
             return json.dumps({"message": "Snapshot saved successfully."})
         else:
             response.status = 400

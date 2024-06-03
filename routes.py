@@ -59,7 +59,7 @@ def underwater():
 
 @route('/snapshot/add', method='POST')
 def save_snapshot():
-    return snapshot(request.json, snapshotRepo)
+    return snapshot(dict(request.json), snapshotRepo)
 
 @route('/snapshots/<name>')
 def snapshot_get(name: str):
