@@ -1,7 +1,6 @@
 from enum import Enum
 from bottle import response, DictProperty
 import json
-
 from snapshot_repo import Snapshot, SnapshotRepository
 
 class Cell(Enum):
