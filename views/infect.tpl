@@ -40,7 +40,7 @@
     <div id="calc">
     <div>
     <div class="controls">
-        <input type="text" name="N" placeholder="Размер стороны">
+        <input type="text" id="n" placeholder="Размер стороны">
         <button id="start"><span>Начать моделирование</span></button>
         <button id="clear"><span>Очистить</span></button>
     </div>
