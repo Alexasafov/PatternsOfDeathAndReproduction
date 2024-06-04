@@ -210,6 +210,9 @@ function addRandomObjects() {
 
 
 // Привязка функций к кнопкам
+var grid = document.getElementById('gridContainer');
 document.getElementById('start').addEventListener('click', startGame);
 document.getElementById('clear').addEventListener('click', clearGrid);
 document.getElementById('random').addEventListener('click', addRandomObjects);
+
+window.onload = initialize;
