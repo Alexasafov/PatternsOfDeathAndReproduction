@@ -35,12 +35,10 @@
         
     </div>
 
-    <table>
-    </table>
     <div id="calc">
     <div>
-    <div class="controls">
-        <input type="text" name="N" placeholder="Размер стороны">
+    <div>
+        <input type="number" min="11" max="99" id="n" placeholder="Размер стороны" step="2">
         <button id="start"><span>Начать моделирование</span></button>
         <button id="clear"><span>Очистить</span></button>
     </div>

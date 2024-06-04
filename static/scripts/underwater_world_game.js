@@ -1,4 +1,3 @@
-
 // Определение констант для типов клеток
 const CELL_TYPES = {
     EMPTY: 0,
@@ -208,6 +207,7 @@ function addRandomObjects() {
         world.addPoison(x, y);
     }
 }
+
 var rows = 38;
 var cols = 100;
 // размер поля в пикселях
