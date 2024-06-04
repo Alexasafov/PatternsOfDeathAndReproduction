@@ -1,3 +1,12 @@
+var startButton = document.getElementById("start");
+var randomButton = document.getElementById("random");
+var clearButton = document.getElementById("clear");
+var gridContainer = document.getElementById("gridContainer")
+function setupControlButtons() {
+    startButton.onclick = startButtonHandler;
+    clearButton.onclick = clearButtonHandler;
+    randomButton.onclick = randomButtonHandler;
+}
 // Определение констант для типов клеток
 const CELL_TYPES = {
     EMPTY: 0,
@@ -148,7 +157,7 @@ class UnderwaterWorld {
 const world = new UnderwaterWorld(20, 20);
 
 // Функция для запуска игры
-function startGame() {
+function startButtonHandler() {
     setInterval(() => {
         // Для каждой клетки на игровом поле
         for (let y = 0; y < world.height; y++) {
@@ -179,7 +188,7 @@ function startGame() {
 }
 
 // Функция для очистки игрового поля
-function clearGrid() {
+function clearButtonHandler() {
     // Проходимся по всем клеткам на игровом поле и устанавливаем тип клетки как пустую
     for (let y = 0; y < world.height; y++) {
         for (let x = 0; x < world.width; x++) {
@@ -189,7 +198,7 @@ function clearGrid() {
 }
 
 // Функция для добавления случайных объектов в игровой мир
-function addRandomObjects() {
+function randomButtonHandler() {
     // Добавляем случайные клетки, еду и яд на игровое поле
     for (let i = 0; i < 10; i++) { // Пример: добавляем 10 случайных клеток
         let x = Math.floor(Math.random() * world.width);
@@ -206,6 +215,7 @@ function addRandomObjects() {
         let y = Math.floor(Math.random() * world.height);
         world.addPoison(x, y);
     }
+    
 }
 
 var rows = 38;
@@ -214,6 +224,7 @@ var cols = 100;
 var sizeHeight = rows * 10;
 var sizeWidth = cols * 10;
 function createTable() {
+    
     if (!gridContainer) {
         console.error("Problem: No div for the drid table!");
     }
@@ -226,10 +237,9 @@ function createTable() {
         for (var j = 0; j < cols; j++) { //
             var cell = document.createElement("td");
             cell.setAttribute("id", i + "_" + j);
-            cell.setAttribute("class", "alive", "dead", "food", "posion");
+            cell.setAttribute("class", "dead");
             cell.style.width = width.toString() + "px";
             cell.style.height = height.toString() + "px";
-            cell.onclick = cellClickHandler;
             tr.appendChild(cell);
         }
         table.appendChild(tr);
@@ -239,6 +249,8 @@ function createTable() {
 
 
 // Привязка функций к кнопкам
-document.getElementById('start').addEventListener('click', startGame);
-document.getElementById('clear').addEventListener('click', clearGrid);
-document.getElementById('random').addEventListener('click', addRandomObjects);
+document.getElementById('start').addEventListener('click', startButtonHandler);
+document.getElementById('clear').addEventListener('click', clearButtonHandler);
+document.getElementById('random').addEventListener('click', randomButtonHandler);
+
+window.onload=createTable;
