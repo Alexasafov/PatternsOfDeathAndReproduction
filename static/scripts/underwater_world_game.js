@@ -123,7 +123,9 @@ class UnderwaterWorld {
             }
         }
         return null;
-    }// Функция для поиска пустой соседней клетки
+    }
+
+    // Функция для поиска пустой соседней клетки
     findEmptyNeighbor(x, y) {
         let neighbors = [
             { dx: 0, dy: -1 }, // Вверх
@@ -145,7 +147,6 @@ class UnderwaterWorld {
 // Создание экземпляра игрового мира
 const world = new UnderwaterWorld(20, 20);
 
-// Функция для запуска игры
 // Функция для запуска игры
 function startGame() {
     setInterval(() => {
@@ -205,6 +206,35 @@ function addRandomObjects() {
         let y = Math.floor(Math.random() * world.height);
         world.addPoison(x, y);
     }
+}
+
+var rows = 38;
+var cols = 100;
+// размер поля в пикселях
+var sizeHeight = rows * 10;
+var sizeWidth = cols * 10;
+function createTable() {
+    if (!gridContainer) {
+        console.error("Problem: No div for the drid table!");
+    }
+    gridContainer.replaceChildren();
+    var table = document.createElement("table");
+    var width = sizeWidth / cols;
+    var height = sizeHeight / rows;
+    for (var i = 0; i < rows; i++) {
+        var tr = document.createElement("tr");
+        for (var j = 0; j < cols; j++) { //
+            var cell = document.createElement("td");
+            cell.setAttribute("id", i + "_" + j);
+            cell.setAttribute("class", "alive", "dead", "food", "posion");
+            cell.style.width = width.toString() + "px";
+            cell.style.height = height.toString() + "px";
+            cell.onclick = cellClickHandler;
+            tr.appendChild(cell);
+        }
+        table.appendChild(tr);
+    }
+    gridContainer.appendChild(table);
 }
 
 
