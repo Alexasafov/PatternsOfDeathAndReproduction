@@ -1,7 +1,14 @@
+table {
+    background-color: #C5D6C6;
+    border-spacing: 0;
+}
+
 td {
     border: 1px solid #F1F5DA;
     border-radius: 3px;
 }
+
+
 
 td.common {
     background-color: transparent;
@@ -13,11 +20,12 @@ td.infect {
 }
 
 td.intractable {
-    background-color: #CC4774;
+    background-color: #87CEEB;
     border-radius: 10px;
 }
 
 #gridContainer {
     padding-bottom: 10px;
+    margin:right;
 }
 

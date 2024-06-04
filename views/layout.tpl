@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="/static/content/site.css" />
     <script src="/static/scripts/modernizr-2.6.2.js"></script>
     <link rel="stylesheet" href="/static/content/game_of_life.css">
+    <link rel="stylesheet" href="/static/content/infect.css">
 </head>
 
 <body>
