@@ -1,5 +1,5 @@
 % rebase('layout.tpl', title=title, year=year)
-
+<h1 id="title">Игра Подводный мир</h1>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,10 +8,7 @@
     <title>{{ title }}</title>
     <style>
         #gridContainer {
-            display: grid;
-            grid-template-columns: repeat(20, 20px);
-            grid-template-rows: repeat(20, 20px);
-            gap: 1px;
+            padding-bottom: 10px;
         }
         .cell {
             width: 20px;
@@ -31,6 +28,15 @@
         }
         ul {
             font-size: 18px;
+        }
+        #start{
+            width:150px;
+        }
+        #random{
+            width:150px;
+        }
+        #clear{
+            width:150px;
         }
     </style>
 </head>
