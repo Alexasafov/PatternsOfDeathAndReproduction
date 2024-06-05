@@ -1,0 +1,6 @@
+{
+    "scripts": {
+      "underwater_world_game_test": "mocha"
+    }
+  }
+  

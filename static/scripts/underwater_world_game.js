@@ -1,232 +1,74 @@
-var startButton = document.getElementById("start");
-var randomButton = document.getElementById("random");
-var clearButton = document.getElementById("clear");
-var gridContainer = document.getElementById("gridContainer")
-function setupControlButtons() {
-    startButton.onclick = startButtonHandler;
-    clearButton.onclick = clearButtonHandler;
-    randomButton.onclick = randomButtonHandler;
-}
-// Определение констант для типов клеток
-const CELL_TYPES = {
-    EMPTY: 0,
-    CELL: 1,
-    FOOD: 2,
-    POISON: 3
-};
+var Cell;
+(function (Cell) {
+    Cell[Cell["Died"] = 0] = "Died";
+    Cell[Cell["Alive"] = 1] = "Alive";
+    Cell[Cell["Empty"] = 2] = "Empty";
+    Cell[Cell["Food"] = 3] = "Food";
+    Cell[Cell["Poison"] = 4] = "Poison";
+})(Cell || (Cell = {}));
 
-// Определение класса для клеток
-class Cell {
-    constructor(x, y, energy = 100, maxAge = 50) {
-        this.x = x;
-        this.y = y;
-        this.energy = energy;
-        this.maxAge = maxAge;
-        this.age = 0;
-    }
-
-    // Функция для перемещения клетки на новую позицию
-    move(dx, dy) {
-        this.x += dx;
-        this.y += dy;
-    }
-
-    // Функция для уменьшения энергии клетки с каждым тиком
-    decreaseEnergy() {
-        this.energy -= 1;
-        this.age += 1;
-    }
-
-    // Функция для проверки, достигла ли клетка максимального возраста
-    isMaxAge() {
-        return this.age >= this.maxAge;
-    }
-}
-
-// Определение класса для игрового мира
-class UnderwaterWorld {
-    constructor(width, height) {
-        this.width = width;
-        this.height = height;
-        this.grid = [];
-        this.initializeGrid();
-    }
-
-    // Функция для инициализации игровой сетки
-    initializeGrid() {
-        for (let y = 0; y < this.height; y++) {
-            let row = [];
-            for (let x = 0; x < this.width; x++) {
-                row.push(CELL_TYPES.EMPTY);
-            }
-            this.grid.push(row);
-        }
-    }
-
-    // Функция для добавления клетки в игровой мир
-    addCell(cell) {
-        this.grid[cell.y][cell.x] = CELL_TYPES.CELL;
-    }
-
-    // Функция для добавления еды в игровой мир
-    addFood(x, y) {
-        this.grid[y][x] = CELL_TYPES.FOOD;
-    }
-
-    // Функция для добавления яда в игровой мир
-    addPoison(x, y) {
-        this.grid[y][x] = CELL_TYPES.POISON;
-    }
-
-    // Функция для проверки пустоты клетки
-    isEmpty(x, y) {
-        return this.grid[y][x] === CELL_TYPES.EMPTY;
-    }
-
-    // Функция для перемещения клетки на новую позицию
-    moveCell(cell, dx, dy) {
-        let newX = cell.x + dx;
-        let newY = cell.y + dy;
-
-        // Проверяем, находится ли новая позиция в пределах игрового поля
-        if (newX >= 0 && newX < this.width && newY >= 0 && newY < this.height) {
-            // Если новая позиция пустая, перемещаем клетку
-            if (this.isEmpty(newX, newY)) {
-                this.grid[cell.y][cell.x] = CELL_TYPES.EMPTY;
-                cell.move(dx, dy);
-                this.grid[cell.y][cell.x] = CELL_TYPES.CELL;
-            }
-            // Если на новой позиции еда или яд, обновляем энергию клетки
-            else if (this.grid[newY][newX] === CELL_TYPES.FOOD) {
-                cell.energy += 10;
-                this.grid[newY][newX] = CELL_TYPES.EMPTY;
-                cell.move(dx, dy);
-                this.grid[cell.y][cell.x] = CELL_TYPES.CELL;
-            } else if (this.grid[newY][newX] === CELL_TYPES.POISON) {
-                cell.energy -= 10;
-                this.grid[newY][newX] = CELL_TYPES.EMPTY;
-                cell.move(dx, dy);
-                this.grid[cell.y][cell.x] = CELL_TYPES.CELL;
-            }
-            // Если на новой позиции другая клетка, проверяем возможность размножения
-            else if (this.grid[newY][newX] === CELL_TYPES.CELL) {
-                let otherCell = this.findCellAt(newX, newY);
-                if (cell.energy > 50 && otherCell.energy > 50) {
-                    let emptyNeighbor = this.findEmptyNeighbor(newX, newY);
-                    if (emptyNeighbor) {
-                        let newCell = new Cell(emptyNeighbor.x, emptyNeighbor.y);
-                        this.addCell(newCell);
-                    }
-                }
-            }
-        }
-    }
-
-    // Функция для поиска клетки по координатам
-    findCellAt(x, y) {
-        for (let row of this.grid) {
-            for (let cell of row) {
-                if (cell instanceof Cell && cell.x === x && cell.y === y) {
-                    return cell;
-                }
-            }
-        }
-        return null;
-    }
-
-    // Функция для поиска пустой соседней клетки
-    findEmptyNeighbor(x, y) {
-        let neighbors = [
-            { dx: 0, dy: -1 }, // Вверх
-            { dx: 0, dy: 1 },  // Вниз
-            { dx: -1, dy: 0 }, // Влево
-            { dx: 1, dy: 0 }   // Вправо
-        ];
-        for (let neighbor of neighbors) {
-            let newX = x + neighbor.dx;
-            let newY = y + neighbor.dy;
-            if (newX >= 0 && newX < this.width && newY >= 0 && newY < this.height && this.isEmpty(newX, newY)) {
-                return { x: newX, y: newY };
-            }
-        }
-        return null;
-    }
-}
-
-// Создание экземпляра игрового мира
-const world = new UnderwaterWorld(20, 20);
-
-// Функция для запуска игры
-function startButtonHandler() {
-    setInterval(() => {
-        // Для каждой клетки на игровом поле
-        for (let y = 0; y < world.height; y++) {
-            for (let x = 0; x < world.width; x++) {
-                let cell = world.grid[y][x];
-                if (cell instanceof Cell) {
-                    // Уменьшаем энергию клетки
-                    cell.decreaseEnergy();
-                    // Если клетка достигла максимального возраста или энергия у нее падает до нуля, удаляем клетку
-                    if (cell.isMaxAge() || cell.energy <= 0) {
-                        world.grid[y][x] = CELL_TYPES.EMPTY;
-                    } else {
-                        // Выбираем случайное направление для перемещения клетки
-                        let directions = [
-                            { dx: 0, dy: -1 }, // Вверх
-                            { dx: 0, dy: 1 },  // Вниз
-                            { dx: -1, dy: 0 }, // Влево
-                            { dx: 1, dy: 0 }   // Вправо
-                        ];
-                        let randomDirection = directions[Math.floor(Math.random() * directions.length)];
-                        // Перемещаем клетку
-                        world.moveCell(cell, randomDirection.dx, randomDirection.dy);
-                    }
-                }
-            }
-        }
-    }, 1000); // Задаем интервал в одну секунду (можно настроить)
-}
-
-// Функция для очистки игрового поля
-function clearButtonHandler() {
-    // Проходимся по всем клеткам на игровом поле и устанавливаем тип клетки как пустую
-    for (let y = 0; y < world.height; y++) {
-        for (let x = 0; x < world.width; x++) {
-            world.grid[y][x] = CELL_TYPES.EMPTY;
-        }
-    }
-}
-
-// Функция для добавления случайных объектов в игровой мир
-function randomButtonHandler() {
-    // Добавляем случайные клетки, еду и яд на игровое поле
-    for (let i = 0; i < 10; i++) { // Пример: добавляем 10 случайных клеток
-        let x = Math.floor(Math.random() * world.width);
-        let y = Math.floor(Math.random() * world.height);
-        world.addCell(new Cell(x, y));
-    }
-    for (let i = 0; i < 5; i++) { // Пример: добавляем 5 случайных объектов еды
-        let x = Math.floor(Math.random() * world.width);
-        let y = Math.floor(Math.random() * world.height);
-        world.addFood(x, y);
-    }
-    for (let i = 0; i < 5; i++) { // Пример: добавляем 5 случайных объектов яда
-        let x = Math.floor(Math.random() * world.width);
-        let y = Math.floor(Math.random() * world.height);
-        world.addPoison(x, y);
-    }
-    
-}
-
-var rows = 38;
+var heightInput = document.getElementById('heightW');
+var widthInput = document.getElementById('widthW');
+var startButton = document.getElementById("startW");
+var randomButton = document.getElementById("randomW");
+var clearButton = document.getElementById("clearW");
+var gridContainer = document.getElementById("gridContainer");
+var cellCount = document.getElementById("cellCountW");
+var foodCount = document.getElementById("foodCountW");
+var poisonCount = document.getElementById("poisonCountW");
+var rows = 25;
 var cols = 100;
-// размер поля в пикселях
 var sizeHeight = rows * 10;
 var sizeWidth = cols * 10;
+var playing = false;
+var grid;
+var timer;
+var reproductionTime = 100;
+
+var cellEnergy = {}; // To store energy of each cell
+var maxAge = 100; // Maximum age of cells
+var initialEnergy = 50; // Initial energy of cells
+var energyDecrement = 1; // Energy decrement per tick
+
+function getCell(x, y) {
+    return document.getElementById(x + "_" + y);
+}
+
+function createGrid() {
+    var newGrid = new Array(rows);
+    for (var i = 0; i < rows; i++) {
+        newGrid[i] = new Array(cols);
+        for (var j = 0; j < cols; j++) {
+            newGrid[i][j] = Cell.Empty;
+        }
+    }
+    return newGrid;
+}
+
+function initializeGrids() {
+    grid = createGrid();
+    cellEnergy = {};
+}
+
+function resetGrid() {
+    for (var i = 0; i < rows; i++) {
+        for (var j = 0; j < cols; j++) {
+            grid[i][j] = Cell.Empty;
+        }
+    }
+    cellEnergy = {};
+}
+
+function initialize() {
+    createTable();
+    initializeGrids();
+    resetGrid();
+    setupControlButtons();
+}
+
 function createTable() {
-    
     if (!gridContainer) {
-        console.error("Problem: No div for the drid table!");
+        console.error("Problem: No div for the grid table!");
     }
     gridContainer.replaceChildren();
     var table = document.createElement("table");
@@ -234,12 +76,13 @@ function createTable() {
     var height = sizeHeight / rows;
     for (var i = 0; i < rows; i++) {
         var tr = document.createElement("tr");
-        for (var j = 0; j < cols; j++) { //
+        for (var j = 0; j < cols; j++) {
             var cell = document.createElement("td");
             cell.setAttribute("id", i + "_" + j);
-            cell.setAttribute("class", "dead");
+            cell.setAttribute("class", "empty");
             cell.style.width = width.toString() + "px";
             cell.style.height = height.toString() + "px";
+            cell.onclick = cellClickHandler;
             tr.appendChild(cell);
         }
         table.appendChild(tr);
@@ -247,10 +90,233 @@ function createTable() {
     gridContainer.appendChild(table);
 }
 
+function cellClickHandler() {
+    var rowcol = this.id.split("_");
+    var row = parseInt(rowcol[0]);
+    var col = parseInt(rowcol[1]);
+    var classes = this.getAttribute("class");
 
-// Привязка функций к кнопкам
-document.getElementById('start').addEventListener('click', startButtonHandler);
-document.getElementById('clear').addEventListener('click', clearButtonHandler);
-document.getElementById('random').addEventListener('click', randomButtonHandler);
+    if (classes.indexOf("alive") > -1) {
+        this.setAttribute("class", "died");
+        grid[row][col] = Cell.Died;
+    } else {
+        this.setAttribute("class", "alive");
+        grid[row][col] = Cell.Alive;
+        cellEnergy[row + "_" + col] = initialEnergy; // Initialize energy for new cell
+    }
+}
 
-window.onload=createTable;
+function updateView() {
+    for (var i = 0; i < rows; i++) {
+        for (var j = 0; j < cols; j++) {
+            var cell = getCell(i, j);
+            if (cell === null) {
+                console.log("No cell with this coordinates");
+                return;
+            }
+            switch (grid[i][j]) {
+                case Cell.Died:
+                    cell.setAttribute("class", "died");
+                    break;
+                case Cell.Alive:
+                    cell.setAttribute("class", "alive");
+                    break;
+                case Cell.Food:
+                    cell.setAttribute("class", "food");
+                    break;
+                case Cell.Poison:
+                    cell.setAttribute("class", "poison");
+                    break;
+                case Cell.Empty:
+                default:
+                    cell.setAttribute("class", "empty");
+                    break;
+            }
+        }
+    }
+}
+
+function setupControlButtons() {
+    startButton.onclick = startButtonHandler;
+    clearButton.onclick = clearButtonHandler;
+    randomButton.onclick = randomButtonHandler;
+    widthInput.onchange = resizeButtonHandler;
+    heightInput.onchange = resizeButtonHandler;
+    cellCount.onchange = validateInput;
+    foodCount.onchange = validateInput;
+    poisonCount.onchange = validateInput;
+}
+
+function randomButtonHandler() {
+    if (playing) return;
+    clearButtonHandler();
+
+    let cellCountValue = parseInt(cellCount.value) || 0;
+    let foodCountValue = parseInt(foodCount.value) || 0;
+    let poisonCountValue = parseInt(poisonCount.value) || 0;
+
+    if (cellCountValue + foodCountValue + poisonCountValue > rows * cols) {
+        alert("Слишком много объектов для текущего размера поля!");
+        return;
+    }
+
+    for (let i = 0; i < cellCountValue; i++) {
+        placeRandom(Cell.Alive);
+    }
+    for (let i = 0; i < foodCountValue; i++) {
+        placeRandom(Cell.Food);
+    }
+    for (let i = 0; i < poisonCountValue; i++) {
+        placeRandom(Cell.Poison);
+    }
+    updateView();
+}
+
+function placeRandom(type) {
+    let placed = false;
+    while (!placed) {
+        let i = Math.floor(Math.random() * rows);
+        let j = Math.floor(Math.random() * cols);
+        if (grid[i][j] === Cell.Empty) {
+            grid[i][j] = type;
+            if (type === Cell.Alive) {
+                cellEnergy[i + "_" + j] = initialEnergy;
+            }
+            placed = true;
+        }
+    }
+}
+
+function clearButtonHandler() {
+    console.log("Clear the game: stop playing, clear the grid");
+    playing = false;
+    startButton.innerHTML = "Старт";
+    clearTimeout(timer);
+    var cellsList = document.getElementsByClassName("alive");
+    var cell;
+    while (cell = cellsList.item(0)) {
+        cell.setAttribute("class", "empty");
+    }
+    resetGrid();
+    updateView();
+}
+
+function startButtonHandler() {
+    if (playing) {
+        console.log("Pause the game");
+        playing = false;
+        this.innerHTML = "Продолжить";
+        clearTimeout(timer);
+    } else {
+        console.log("Continue the game");
+        playing = true;
+        this.innerHTML = "Пауза";
+        play();
+    }
+}
+
+function play() {
+    computeNextGen();
+    if (playing) {
+        timer = setTimeout(play, reproductionTime);
+    }
+}
+
+function computeNextGen() {
+    var nextGrid = createGrid();
+    var cellsToReproduce = [];
+
+    for (var i = 0; i < rows; i++) {
+        for (var j = 0; j < cols; j++) {
+            if (grid[i][j] === Cell.Alive) {
+                let newI = i, newJ = j;
+                switch (Math.floor(Math.random() * 4)) {
+                    case 0: newI = (i > 0) ? i - 1 : i; break; // Up
+                    case 1: newJ = (j < cols - 1) ? j + 1 : j; break; // Right
+                    case 2: newI = (i < rows - 1) ? i + 1 : i; break; // Down
+                    case 3: newJ = (j > 0) ? j - 1 : j; break; // Left
+                }
+
+                if (grid[newI][newJ] === Cell.Empty) {
+                    nextGrid[newI][newJ] = Cell.Alive;
+                    cellEnergy[newI + "_" + newJ] = cellEnergy[i + "_" + j] - energyDecrement;
+                } else if (grid[newI][newJ] === Cell.Food) {
+                    nextGrid[newI][newJ] = Cell.Alive;
+                    cellEnergy[newI + "_" + newJ] = cellEnergy[i + "_" + j] + 10 - energyDecrement;
+                } else if (grid[newI][newJ] === Cell.Poison) {
+                    nextGrid[newI][newJ] = Cell.Alive;
+                    cellEnergy[newI + "_" + newJ] = cellEnergy[i + "_" + j] - 10 - energyDecrement;
+                } else {
+                    nextGrid[i][j] = Cell.Alive;
+                    cellEnergy[i + "_" + j] -= energyDecrement;
+
+                    if (cellEnergy[i + "_" + j] > 50 && cellEnergy[newI + "_" + newJ] > 50) {
+                        cellsToReproduce.push([i, j, newI, newJ]);
+                    }
+                }
+
+                if (cellEnergy[i + "_" + j] <= 0 || cellEnergy[i + "_" + j] > maxAge) {
+                    nextGrid[i][j] = Cell.Died;
+                }
+            } else if (grid[i][j] === Cell.Food) {
+                nextGrid[i][j] = Cell.Food;
+            } else if (grid[i][j] === Cell.Poison) {
+                nextGrid[i][j] = Cell.Poison;
+            }
+        }
+    }
+
+    // Handle reproduction
+    for (let coords of cellsToReproduce) {
+        let [i, j, newI, newJ] = coords;
+        let neighbors = getEmptyNeighbors(i, j, newI, newJ);
+        if (neighbors.length > 0) {
+            let [ni, nj] = neighbors[Math.floor(Math.random() * neighbors.length)];
+            nextGrid[ni][nj] = Cell.Alive;
+            cellEnergy[ni + "_" + nj] = initialEnergy;
+        }
+    }
+
+    grid = nextGrid;
+    updateView();
+}
+
+function getEmptyNeighbors(i, j, newI, newJ) {
+    let neighbors = [];
+    let positions = [
+        [i - 1, j], [i + 1, j], [i, j - 1], [i, j + 1], // Original cell's neighbors
+        [newI - 1, newJ], [newI + 1, newJ], [newI, newJ - 1], [newI, newJ + 1] // New cell's neighbors
+    ];
+
+    for (let [ni, nj] of positions) {
+        if (ni >= 0 && ni < rows && nj >= 0 && nj < cols && grid[ni][nj] === Cell.Empty) {
+            neighbors.push([ni, nj]);
+        }
+    }
+
+    return neighbors;
+}
+
+function validateInput() {
+    let inputValue = parseInt(this.value);
+    let min = parseInt(this.min);
+    let max = parseInt(this.max);
+
+    if (isNaN(inputValue) || inputValue < min || inputValue > max) {
+        alert(`Пожалуйста, введите значение от ${min} до ${max}.`);
+        this.value = '';
+    }
+}
+
+function resizeButtonHandler() {
+    rows = parseInt(heightInput.value);
+    cols = parseInt(widthInput.value);
+    playing = false;
+    startButton.innerText = "Старт";
+    clearTimeout(timer);
+    initializeGrids();
+    createTable();
+    resetGrid();
+}
+
+window.onload = initialize;
