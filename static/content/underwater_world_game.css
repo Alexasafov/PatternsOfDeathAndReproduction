@@ -1,35 +1,67 @@
 #gridContainer {
-            display: grid;
-            grid-template-columns: repeat(20, 20px);
-            grid-template-rows: repeat(20, 20px);
-            gap: 1px;
-        }
-        .cell {
-            width: 20px;
-            height: 20px;
-        }
-        .alive {
-            background-color: red;
-        }
-        .dead {
-            background-color: green;
-        }
-        .poison {
-            background-color: purple;
-        }
-        .food {
-            background-color: yellow;
-        }
-        ul {
-            font-size: 18px;
-        }
-#start,
-#clear,
-#random {
+    padding-bottom: 10px;
+}
+
+#title {
+    text-align: center;
+}
+
+table {
+    background-color: #C5D6C6;
+    border-spacing: 0;
+}
+
+td {
+    border: 1px solid #F1F5DA;
+    border-radius: 3px;
+}
+
+span {
+    color: #222;
+}
+
+
+ .styled-button{
     padding: .75em;
     border-radius: 5px;
     border: none;    
     background: linear-gradient(
         to bottom right,
-        #C5DEC6, #587559);
+        #C5DEC6, #0fda16);
+}
+
+.styled-input{
+    width: 80px;
+    padding: .75em;
+    border-radius: 5px;
+    border: none;
+    background: linear-gradient(
+        to bottom right,
+        #C5DEC6, #0fda16);
+}
+
+td.died {
+    background-color: red;
+}
+td.dying{
+    background-color: #222;
+}
+
+td.alive {
+    background-color: #2ce714;
+    border-radius: 10px;
+}
+td.empty{
+    background-color: azure;
+}
+td.food{
+    background-color: orange;
+}
+td.poison{
+    background-color: blueviolet;
+}
+.underwaterpage-background {
+    background-image: url('static/images/bubble.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
 }

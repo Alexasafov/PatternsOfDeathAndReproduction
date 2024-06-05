@@ -9,6 +9,7 @@
     <script src="/static/scripts/modernizr-2.6.2.js"></script>
     <link rel="stylesheet" href="/static/content/game_of_life.css">
     <link rel="stylesheet" href="/static/content/infect.css">
+    <link rel="stylesheet" href="/static/content/underwater_world_game.css">
 </head>
 
 <body>

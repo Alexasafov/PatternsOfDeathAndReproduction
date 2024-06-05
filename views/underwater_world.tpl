@@ -1,54 +1,20 @@
+
 % rebase('layout.tpl', title=title, year=year)
+<div class="underwaterpage-background">
 <h1 id="title">Игра Подводный мир</h1>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
-    <style>
-        #gridContainer {
-            padding-bottom: 10px;
-        }
-        .cell {
-            width: 20px;
-            height: 20px;
-        }
-        .alive {
-            background-color: red;
-        }
-        .dead {
-            background-color: green;
-        }
-        .poison {
-            background-color: purple;
-        }
-        .food {
-            background-color: yellow;
-        }
-        ul {
-            font-size: 18px;
-        }
-        #start{
-            width:150px;
-        }
-        #random{
-            width:150px;
-        }
-        #clear{
-            width:150px;
-        }
-    </style>
-</head>
-<body>
 
 <div id="gridContainer">
 </div>
 
 <div class="controls">
-    <button id="start"><span>Старт</span></button>
-    <button id="clear"><span>Очистить</span></button>
-    <button id="random"><span>Рандом</span></button>
+    <button class = "styled-button" id="startW"><span>Старт</span></button>
+    <button class = "styled-button"id="clearW"><span>Очистить</span></button>
+    <button class = "styled-button"id="randomW"><span>Добавить объекты</span></button>
+    <input class = "styled-input" id="widthW" type="number" min="10" max="100" value="100" required="true" placeholder="Ширина">
+    <input class = "styled-input" id="heightW" type="number" min="10" max="25" value="25" required="true" placeholder="Высота">
+    <input class = "styled-input" id="cellCountW" type="number" min="2" max="100" value=" " required="true" placeholder="Клетки">
+    <input class = "styled-input" id="poisonCountW" type="number" min="0" max="500" value=" " required="true" placeholder="Яд">
+    <input class = "styled-input" id="foodCountW" type="number" min="0" max="500" value=" " required="true" placeholder="Еда">
 </div>
 
 <h1>Теория игры "Подводный мир"</h1>
@@ -60,10 +26,10 @@
 <h2>Правила игры "Подводный мир"</h2>
 <p>Игра происходит на двумерной сетке, на которой находятся следующие объекты:</p>
 <ul>
-    <li><strong>Живая клетка</strong> (обычно обозначается красным цветом).</li>
-    <li><strong>Мёртвая клетка</strong> (обычно обозначается зеленым).</li>
-    <li><strong>Яд</strong> (обычно отображается фиолетовым).</li>
-    <li><strong>Еда</strong> (обычно отображается жёлтым).</li>
+    <li><strong>Живая клетка</strong> (обычно обозначается зелёным цветом).</li>
+    <li><strong>Мёртвая клетка</strong> (обычно обозначается красным цветом).</li>
+    <li><strong>Яд</strong> (обычно отображается фиолетовым цветом).</li>
+    <li><strong>Еда</strong> (обычно отображается оранжевым цветом).</li>
 </ul>
 <p>
     Эволюция сетки происходит в дискретные временные шаги, и состояние каждой клетки обновляется одновременно в соответствии с фиксированным набором правил, которые зависят от состояния соседних клеток.
@@ -99,6 +65,4 @@
 </ul>
 
 <script src="/static/scripts/underwater_world_game.js"></script>
-
-</body>
-</html>
+</div>
